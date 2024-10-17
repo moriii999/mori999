@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Stream Overlay</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #0d0d0d; /* Dunkler Hintergrund für Cyberpunk-Stimmung */
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="overlayCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('overlayCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Setze die Auflösung des Canvas
+        canvas.width = window.innerWidth;
+        canvas.height = canvas.width / 3; // 1:3 Verhältnis
+
+        // Farben und Effekte für den Cyberpunk-Stil
+        const neonColors = ['#00ffff', '#ff00ff', '#ff8800'];
+        const glitchLines = [];
+
+        function drawBillboard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Zeichne den Hintergrund der Plakatwand
+            ctx.fillStyle = '#1a1a1a'; // Dunkelgrauer Hintergrund für den Look der Plakatwand
+            ctx.fillRect(50, 50, canvas.width - 100, canvas.height - 100);
+
+            // Zeichne einen neonfarbenen Rand
+            ctx.strokeStyle = '#00ffcc';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(50, 50, canvas.width - 100, canvas.height - 100);
+
+            // Text im Cyberpunk-Stil
+            ctx.font = 'bold 48px Arial';
+            ctx.fillStyle = neonColors[Math.floor(Math.random() * neonColors.length)];
+            ctx.textAlign = 'center';
+            ctx.fillText('YOUR STREAM NAME', canvas.width / 2, canvas.height / 2);
+
+            // Glitch-Effekte hinzufügen
+            drawGlitchEffect();
+        }
+
+        function drawGlitchEffect() {
+            ctx.save();
+            glitchLines.forEach(line => {
+                ctx.fillStyle = line.color;
+                ctx.fillRect(line.x, line.y, line.width, line.height);
+            });
+            ctx.restore();
+        }
+
+        function updateGlitchLines() {
+            glitchLines.length = 0; // Clear the existing glitch lines
+
+            for (let i = 0; i < 5; i++) {
+                glitchLines.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    width: Math.random() * (canvas.width / 5),
+                    height: 2,
+                    color: neonColors[Math.floor(Math.random() * neonColors.length)]
+                });
+            }
+        }
+
+        // Animationsschleife, um das Overlay dynamisch zu machen
+        function animate() {
+            updateGlitchLines();
+            drawBillboard();
+            requestAnimationFrame(animate);
+        }
+
+        animate(); // Starte die Animation
+    </script>
+</body>
+</html>
